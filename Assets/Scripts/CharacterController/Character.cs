@@ -22,6 +22,12 @@ public class Character : MonoBehaviour
     public float airControl = 0.5f;
  
     public StateMachine movementSM;
+    public StandingState standing;
+    public JumpingState jumping;
+    public CrouchingState crouching;
+    public LandingState landing;
+    public SprintState sprinting;
+    public SprintJumpState sprintjumping;
  
     [HideInInspector]
     public float gravityValue = -9.81f;
@@ -49,6 +55,14 @@ public class Character : MonoBehaviour
  
         movementSM = new StateMachine();
  
+        standing = new StandingState(this, movementSM);
+        jumping = new JumpingState(this, movementSM);
+        crouching = new CrouchingState(this, movementSM);
+        landing = new LandingState(this, movementSM);
+        sprinting = new SprintState(this, movementSM);
+        sprintjumping = new SprintJumpState(this, movementSM);
+
+
         normalColliderHeight = controller.height;
         gravityValue *= gravityMultiplier;
     }
