@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Level 1 Floor
+  m_Name: Start Platorm
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -48,9 +48,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
-        m_Texture: {fileID: 2800000, guid: 6c7d09cc3dc1761448863e2766c7167c, type: 3}
-        m_Scale: {x: 1, y: -0.81}
-        m_Offset: {x: 0, y: -0.1}
+        m_Texture: {fileID: 2800000, guid: 2f26221c2663f004180c3d25eb377c8d, type: 3}
+        m_Scale: {x: 0.84, y: 1}
+        m_Offset: {x: 0.12, y: 0}
     - _DetailMask:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
