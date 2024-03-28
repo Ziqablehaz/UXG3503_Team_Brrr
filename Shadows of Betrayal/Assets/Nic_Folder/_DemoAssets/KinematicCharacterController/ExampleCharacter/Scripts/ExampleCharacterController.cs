@@ -61,6 +61,7 @@ namespace KinematicCharacterController.Examples
         public float JumpScalableForwardSpeed = 10f;
         public float JumpPreGroundingGraceTime = 0f;
         public float JumpPostGroundingGraceTime = 0f;
+        public float SuperJumpSpeed = 2f;
 
         [Header("Misc")]
         public List<Collider> IgnoredColliders = new List<Collider>();
@@ -85,6 +86,7 @@ namespace KinematicCharacterController.Examples
         private Vector3 _internalVelocityAdd = Vector3.zero;
         private bool _shouldBeCrouching = false;
         private bool _isCrouching = false;
+        public bool _superJumpRequested{get;set;}
 
         private Vector3 lastInnerNormal = Vector3.zero;
         private Vector3 lastOuterNormal = Vector3.zero;
@@ -209,6 +211,7 @@ namespace KinematicCharacterController.Examples
         }
 
         private Quaternion _tmpTransientRot;
+        
 
         /// <summary>
         /// (Called by KinematicCharacterMotor during its update cycle)
@@ -372,6 +375,35 @@ namespace KinematicCharacterController.Examples
                                 currentVelocity += (jumpDirection * JumpUpSpeed) - Vector3.Project(currentVelocity, Motor.CharacterUp);
                                 currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
                                 _jumpRequested = false;
+                                _jumpConsumed = true;
+                                _jumpedThisFrame = true;
+                            }
+                        }
+
+                        // Handle Super Jumping
+                        _jumpedThisFrame = false;
+                        _timeSinceJumpRequested += deltaTime;
+                        if (_superJumpRequested)
+                        {
+                            // See if we actually are allowed to jump
+                            if (!_jumpConsumed && ((AllowJumpingWhenSliding ? Motor.GroundingStatus.FoundAnyGround : Motor.GroundingStatus.IsStableOnGround) || _timeSinceLastAbleToJump <= JumpPostGroundingGraceTime))
+                            {
+                                // Calculate jump direction before ungrounding
+                                Vector3 jumpDirection = Motor.CharacterUp;
+                                if (Motor.GroundingStatus.FoundAnyGround && !Motor.GroundingStatus.IsStableOnGround)
+                                {
+                                    jumpDirection = Motor.GroundingStatus.GroundNormal;
+                                }
+
+                                // Makes the character skip ground probing/snapping on its next update. 
+                                // If this line weren't here, the character would remain snapped to the ground when trying to jump. Try commenting this line out and see.
+                                Motor.ForceUnground();
+
+                                // Add to the return velocity and reset jump state
+                                currentVelocity += (jumpDirection * JumpUpSpeed*2) - Vector3.Project(currentVelocity, Motor.CharacterUp);
+                                currentVelocity += (_moveInputVector * JumpScalableForwardSpeed);
+                                _jumpRequested = false;
+                                _superJumpRequested=false;
                                 _jumpConsumed = true;
                                 _jumpedThisFrame = true;
                             }
